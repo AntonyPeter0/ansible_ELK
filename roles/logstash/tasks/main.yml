@@ -3,21 +3,39 @@
 # Set up Logstash
 ########################################################
 
-- name: Install Logstash from APT repository
-  apt: name=logstash state=present force=true update_cache=yes
+- name: Download Logstash Deb Package
+  get_url:
+    url: "https://artifacts.elastic.co/downloads/logstash/logstash-7.9.0.deb"
+    dest: "/tmp"
 
-- name: Copy config
-  template: src=logstashConf.j2 dest=/etc/logstash/conf.d/logstash.conf
+- name: Install Logstash Deb Package
+  become: yes
+  apt:
+    deb: "/tmp/logstash-7.9.0.deb"
 
-# Requires Ansible 2.4 and above
-- name: Force systemd to reread configs
-  systemd: daemon_reload=yes
+- name: Create Logstash Pipeline File
+  become: yes
+  file:
+      path: /etc/logstash/conf.d/main.conf
+      state: touch
 
-- name: Enable logstash.service
-  systemd:
-    name: logstash.service
-    enabled: yes
-
-- name: Start logstash.service
-  systemd: name=logstash.service state=restarted
-  become: true
+- name: Add Logstash Pipeline Configuration
+  become: yes
+  blockinfile:
+      path: /etc/logstash/conf.d/main.conf
+      marker: ""
+      block: |
+        input {
+          beats {
+            port => 5044
+          }
+        }
+        output {
+          elasticsearch { hosts => ["localhost:9200"]
+          }
+        }
+- name: Start Logstash Service
+  become: yes
+  service:
+    name: logstash
+    state: started
