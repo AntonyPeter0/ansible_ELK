@@ -25,15 +25,24 @@
       path: /etc/logstash/conf.d/main.conf
       marker: ""
       block: |
-        input {
-          beats {
-            port => 5044
+          input {
+           beats {
+             port => 5044
+             host => "localhost"
+           }
           }
-        }
-        output {
-          elasticsearch { hosts => ["localhost:9200"]
+
+          filter {
+           grok {
+            match => {"message" => "%{COMBINEDAPACHELOG}"}
+           }
           }
-        }
+
+          output {
+           elasticsearch { hosts => ["localhost:9200"] }
+           stdout { codec => rubydebug }
+          }
+          
 - name: Start Logstash Service
   become: yes
   service:
