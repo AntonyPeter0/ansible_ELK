@@ -20,14 +20,14 @@ filebeat.inputs:
 # you can use different inputs for various configurations.
 # Below are the input specific configurations.
 
-- type: log
+ - type: log
 
   # Change to true to enable this input configuration.
-  enabled: true
+   enabled: true
 
   # Paths that should be crawled and fetched. Glob based paths.
-  paths:
-    - /var/log/*.log
+   paths:
+     - /var/log/*.log
     #- c:\programdata\elasticsearch\logs\*
 
   # Exclude lines. A list of regular expressions to match. It drops the lines that are
@@ -65,14 +65,14 @@ filebeat.inputs:
   #multiline.match: after
 
 # filestream is an input for collecting log messages from files. It is going to replace log input in the future.
-# - type: filestream
+ - type: filestream
 #
 #   # Change to true to enable this input configuration.
-#   enabled: false
+   enabled: true
 #
 #   # Paths that should be crawled and fetched. Glob based paths.
-#   paths:
-#     - /var/log/*.log
+   paths:
+     - /var/log/*.log
     #- c:\programdata\elasticsearch\logs\*
 
   # Exclude lines. A list of regular expressions to match. It drops the lines that are

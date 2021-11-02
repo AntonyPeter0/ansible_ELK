@@ -31,13 +31,5 @@
       dest: /etc/filebeat/filebeat.yml
 
     # Use command module
-  - name: enable and configure system module
-    command: filebeat modules enable system
-
-    # Use command module
-  - name: Setup filebeat
-    command: filebeat setup
-
-    # Use command module
   - name: Start filebeat service
     command: service filebeat start
